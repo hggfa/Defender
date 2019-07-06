@@ -1,0 +1,149 @@
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta property="theme-color" content="#019aa5">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="JeuxGate" />
+	<meta property="og:description" content="Le bot nommé Jeuxgate" />
+	<meta property="og:url" content="https://jeuxdictator.github.io/Jeuxgate-web/" />
+	<meta property="og:image" content="https://jeuxdictator.github.io/Jeuxgate-web/logo.png" />
+	<title>JeuxGate</title>
+	<link href="https://jeuxdictator.github.io/Jeuxgate-web/logo.png" rel="shortcut icon" type="image/png">
+	<script src="/socket.io/socket.io.js"></script>
+	<script>var socket = io.connect('http://<%=site%>');
+			socket.on('receive', function(receive) {
+				socket.emit("code", "<%=code%>")
+			})
+			socket.on('code', function(id){
+				if(id === "<%=id%>"){
+					document.getElementById("bod").style.display = "initial";
+					document.getElementById("load").style.display = "none";
+				}
+			})
+			socket.on('error', function(code){
+				if(code){
+					alert(code.toString())
+				}
+			})
+			socket.on('errorjg', function(code){
+				if(code){
+					alert("Erreure " + code.toString())
+				}
+			})
+			socket.on('antimentiononk', function(code){
+				console.log(code + " = code")
+				if(code){
+					document.getElementById(code.toString()).checked = true;
+				}
+			})
+			socket.on('antimentionoffk', function(code){
+				console.log(code + " = code")
+				if(code){
+					document.getElementById(code.toString()).checked = false;
+				}
+			})
+			socket.on('antimentionpask', function(code){
+				console.log(code + " = code")
+				if(code){
+					document.getElementById(code.toString()).disabled = true;
+				}
+			})
+		</script>
+	<link href="https://jeuxdictator.github.io/Jeuxgate-web/index.css" rel="stylesheet">
+	<script>
+			function extend(serv) {
+				document.getElementById('list').style.display = "none";
+				document.getElementById(serv).style.display = "block";
+				document.getElementById("listmenu").className = "menu-link";
+				document.getElementById("acceuilmenu").className = "menu-link";
+			} 
+			function retract() {
+				document.getElementById('list').style.display = "initial";
+				<%
+				for(var i = 1 ; i <= Object.keys(JSON.parse(guildsname)).length ; i++) {
+				%>document.getElementById("<%=i-1%>").style.display = "none";
+				<% } %>
+				document.getElementById("listmenu").className += " active";
+				document.getElementById("acceuilmenu").className = "menu-link";
+			} 
+			function antimention(serv){
+				socket.emit("antimention", serv)
+				if(document.getElementById(serv.toString()).disabled === false){
+					if (document.getElementById(serv.toString()).checked === true){
+						document.getElementById(serv.toString()).checked = true;
+					}else{
+						
+						document.getElementById(serv.toString()).checked = true;
+					}
+				}
+				return false
+			}
+	</script>
+</head>
+<body>
+    <center>
+		<noscript>
+			<h1 style="font-size:18px;">Pour pouvoir accèder au site, merci d'activer JavaScript !</h1>
+		</noscript>
+		<center style="display: block;">
+			<img class="load" src="https://i.ytimg.com/vi/y9_tLf8A2hw/maxresdefault.jpg" id="load" alt="SK_" style="display: block;"></img>
+		</center>
+		<div id="bod" style="display: none;">
+		<div class="responsive-headline">
+			<center>
+				<h1>JeuxGate</h1>
+			</center>
+		</div>
+
+		<ul class="menu">
+			<li class="li-menu"><a class="menu-link" id="acceuilmenu" href="./">Accueil / se déconnecter</a></li>
+			<li class="li-menu"><a class="menu-link active" id="listmenu" href="javascript:void(0);" onclick="retract()">Liste des serveurs</a></li>
+			<%if(jgown){%><li class="li-menu over9000" style="height: 46px;float: right;" id="own"><a class="menu-link co">Owner power</a></li><%}%>
+		</ul>
+		<h1>Connecté avec succès !</h1>
+		<br></br>
+		<div id="list">
+			<%
+			for(var i = 1 ; i <= Object.keys(JSON.parse(guildsname)).length ; i++) {
+			%>
+			<div style="vertical-align: 0px; text-align: center; width: 140px; display: inline;  float: left;" >
+				<a href="javascript:void(0);" onclick="extend(<%=i-1%>)" style="display: initial">
+				<img src="<%=JSON.parse(guildslogo)[i -1].a%>" style="border-radius: 50%; border-width: 5px; border-color: white; border-style: solid;width: 128px; height: 128px; background-color: e0e0e0;"></img>
+				<a style="color: white; font-size: 10px; display: block; "><%=JSON.parse(guildsname)[i -1].a%></a>
+				</a>
+			</div>
+			<% } %>
+
+			<div style="vertical-align: 0px; text-align: center; width: 140px; display: inline;  float: left;" >
+				<a href="https://discordapp.com/api/oauth2/authorize?client_id=515891064721244162&permissions=8&scope=bot" target="_blank" style="display: initial">
+				<img src="https://jeuxdictator.github.io/Jeuxgate-web/addme.png" style="border-radius: 50%; border-width: 5px; border-color: white; border-style: solid;width: 128px; height: 128px; background-color: e0e0e0;"></img>
+				<a style="color: white; font-size: 10px; display: block; ">Invitez-le</a>
+				<br><a style="color: white; font-size: 9px; display: block; ">N'oubliez pas de vous reconnectez !</a>
+				</a>	
+			</div>
+		</div>
+
+		<%
+		for(var i = 1 ; i <= Object.keys(JSON.parse(guildsname)).length ; i++) {
+		%>
+		<div id="<%=i -1%>" style="display: none">
+			<center>
+				<h1 style="color: white; font-size: 36px;"><%=JSON.parse(guildsname)[i -1].a%></h1>
+				<a>Antimention</a> 
+				<label class="switch">
+				  <input type="checkbox" id="<%=JSON.parse(guildsid)[i-1].a%>" onclick="antimention(`<%=JSON.parse(guildsid)[i-1].a%>`)" <%if(JSON.parse(guildsmention)[i-1].a === "dis"){%>disabled=""<%}else if(JSON.parse(guildsmention)[i-1].a === "yes"){%>checked<%}%>>
+				  <span class="slider round" ></span>
+				</label>
+			</center>
+		</div>
+		<%}%>
+		<br>
+		<footer>
+            <p>developped by Jeuxdictator</p>
+	
+		</footer>
+		</div>
+	</center>
+
+</body>
+</html>

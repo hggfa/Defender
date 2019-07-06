@@ -1,0 +1,13 @@
+
+<script>
+    function someRandomFunction(){
+        window.location.href = 'http://<%= url %>/nametag/<%= username %>'+ document.getElementById('search_bar').value;
+        return false;
+    }
+    </script>
+    
+    <form onsubmit="return someRandomFunction()">
+        <input id="search_bar" placeholder="tag here" />
+    </form>
+      
+      

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html class="no-js" lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta property="theme-color" content="#019aa5">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="JeuxGate" />
+	<meta property="og:description" content="Le bot nommé Jeuxgate" />
+	<meta property="og:url" content="https://jeuxdictator.github.io/Jeuxgate-web/" />
+	<meta property="og:image" content="https://jeuxdictator.github.io/Jeuxgate-web/logo.png" />
+	<title>JeuxGate</title>
+	<link href="https://jeuxdictator.github.io/Jeuxgate-web/logo.png" rel="shortcut icon" type="image/png">
+	<link href="https://jeuxdictator.github.io/Jeuxgate-web/index.css" rel="stylesheet">
+ </head>
+
+<div class="responsive-headline">
+	<center>
+		<h1>JeuxGate</h1>
+	</center>
+</div>
+<body>
+    <center>
+		<ul class="menu">
+			<li class="li-menu"><a class="menu-link" href="https://jeuxdictator.github.io/Jeuxgate-web/">Accueil</a></li>
+			<li class="li-menu"><a href="https://jeuxdictator.github.io/Jeuxgate-web/changelog.html" class="menu-link">Changelog</a></li>
+			<li class="li-menu"><a href="https://jeuxdictator.github.io/Jeuxgate-web/doc.html" class="menu-link">Doc</a></li>
+			<li class="li-menu"><a href="https://jeuxdictator.github.io/Jeuxgate-web/hissons.html" class="menu-link">Ses enfants</a></li>
+			<li class="li-menu"><a href="https://discordapp.com/api/oauth2/authorize?client_id=515891064721244162&permissions=8&scope=bot" class="menu-link">L'inviter !</a></li>
+		</ul>
+	<br>
+	<a id="login" class="menu-link co" style="font-size: 18px" href="https://discordapp.com/api/oauth2/authorize?client_id=515891064721244162&redirect_uri=https%3A%2F%2Fjeuxgate-priv.herokuapp.com&response_type=code&scope=identify">Connectez-vous</a>
+	<a style="font-size: 20px; color: azure;">Connectez vous pour rejoindre les <%= nbusers %> utilisateurs qui utilisent JeuxGate</a>
+	<footer>
+		<p>developped by Jeuxdictator</p>
+	</footer>
+	<script>
+		function generateRandomString() {
+			const rand = Math.floor(Math.random() * 10);
+			let randStr = '';
+			for (let i = 0; i < 20 + rand; i++) {
+				randStr += String.fromCharCode(33 + Math.floor(Math.random() * 94));
+			}
+			return randStr;
+		}
+		window.onload = () => {
+			const fragment = new URLSearchParams(window.location.hash.slice(1));
+			if (fragment.has("access_token")) {
+				const urlState = fragment.get("state");
+				const stateParameter = localStorage.getItem('stateParameter');
+				if (stateParameter !== atob(decodeURIComponent(urlState))) {
+					return console.log('You may have been clickjacked!');
+				}
+				const accessToken = fragment.get("access_token");
+				const tokenType = fragment.get("token_type");
+				fetch('https://discordapp.com/api/users/@me', {
+					headers: {
+						authorization: `${tokenType} ${accessToken}`
+					}
+				})
+					.then(res => res.json())
+					.then(response => {
+						console.log(response);
+						const { username, discriminator } = response;
+					})
+					.catch(O_o => {});
+			}
+			else {
+				const randStr = generateRandomString();
+				localStorage.setItem('stateParameter', randStr);
+				document.getElementById('login').href += `&state=${encodeURIComponent(btoa(randStr))}`;
+			}
+		}
+	</script>
+</body>
+</html>
